@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../cart/cart_controller.dart';
+import '../theme/app_theme.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -14,6 +15,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         title: const Text("Your Cart"),
       ),
@@ -35,25 +37,28 @@ class _CartPageState extends State<CartPage> {
 
                       return ListTile(
                         title: Text(item.itemName),
-                        subtitle: Text("₹${item.price} x ${item.quantity}"),
+                        subtitle: Text("₹${item.price.toStringAsFixed(0)} x ${item.quantity}"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.remove),
+                              icon: const Icon(Icons.remove_circle_outline),
                               onPressed: () {
                                 setState(() {
-                                  cart.decreaseQty(item.itemId);
+                                  cart.decreaseQty(item.menuItemId);
                                 });
                               },
                             ),
-                            Text(item.quantity.toString()),
+                            Text(
+                              item.quantity.toString(),
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
                             IconButton(
-                              icon: const Icon(Icons.add),
+                              icon: const Icon(Icons.add_circle_outline, color: AppTheme.primary),
                               onPressed: () {
                                 setState(() {
                                   cart.addItem(
-                                    itemId: item.itemId,
+                                    itemId: item.menuItemId,
                                     name: item.itemName,
                                     price: item.price,
                                   );
@@ -83,7 +88,7 @@ class _CartPageState extends State<CartPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        "Total: ₹${cart.totalAmount}",
+                        "Total: ₹${cart.totalAmount.toStringAsFixed(0)}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -94,7 +99,7 @@ class _CartPageState extends State<CartPage> {
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Order placement coming next 🚀"),
+                              content: Text("Proceed to Phase 2 for full checkout & queue token generation!"),
                             ),
                           );
                         },

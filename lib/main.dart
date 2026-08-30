@@ -1,39 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-// Import your pages
+import 'theme/app_theme.dart';
 import 'role_selection_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: 'https://thklxiioebitdolnyepd.supabase.co',
-    anonKey: 'sb_publishable_lU0UmjDhw-r8285XFV-7tQ_rizjgdrG',
-  );
+  try {
+    await Supabase.initialize(
+      url: 'https://thklxiioebitdolnyepd.supabase.co',
+      anonKey: 'sb_publishable_lU0UmjDhw-r8285XFV-7tQ_rizjgdrG',
+    );
+  } catch (e) {
+    debugPrint("Supabase init info/fallback: $e");
+  }
 
-  runApp(const CanteenApp());
+  runApp(const QLessApp());
 }
 
-class CanteenApp extends StatelessWidget {
-  const CanteenApp({super.key});
+class QLessApp extends StatelessWidget {
+  const QLessApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Canteen Pre-Order System',
+      title: 'QLess - Queue-Less Canteen',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.amber,
-          background: const Color(0xFFFFFBF2),
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.amber,
-          foregroundColor: Colors.black,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
       home: const RoleSelectionPage(),
     );
   }
