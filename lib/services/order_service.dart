@@ -155,6 +155,23 @@ class OrderService extends ChangeNotifier {
     }
   }
 
+  bool cancelOrder(String orderId) {
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      final order = _orders[index];
+      if (order.status == OrderStatus.placed) {
+        order.status = OrderStatus.cancelled;
+        // Refund if wallet
+        if (order.paymentMethod == 'Campus Wallet') {
+          topUpWallet(order.totalAmount);
+        }
+        notifyListeners();
+        return true;
+      }
+    }
+    return false;
+  }
+
   // --- Live Queue Statistics ---
   String getCurrentlyServingToken(String canteenId) {
     final readyOrders = _orders

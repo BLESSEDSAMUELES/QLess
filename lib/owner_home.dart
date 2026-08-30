@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models/canteen_models.dart';
 import 'services/order_service.dart';
 import 'role_selection_page.dart';
+import 'widgets/qr_scanner_dialog.dart';
 import 'theme/app_theme.dart';
 
 class OwnerHome extends StatefulWidget {
@@ -637,14 +638,24 @@ class _OwnerHomeState extends State<OwnerHome> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: _verifyAndCompleteToken,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0F766E),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         ),
                         child: const Text("Verify Pass"),
+                      ),
+                      const SizedBox(width: 8),
+                      IconButton.filled(
+                        icon: const Icon(Icons.qr_code_scanner_rounded),
+                        style: IconButton.styleFrom(
+                          backgroundColor: const Color(0xFF14B8A6),
+                          padding: const EdgeInsets.all(14),
+                        ),
+                        tooltip: "Scan Camera QR",
+                        onPressed: () => QrScannerDialog.show(context, canteenId: widget.canteen.id),
                       ),
                     ],
                   ),

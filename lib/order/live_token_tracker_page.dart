@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 import '../models/canteen_models.dart';
 import '../services/order_service.dart';
+import '../widgets/receipt_modal.dart';
 import '../theme/app_theme.dart';
 
 class LiveTokenTrackerPage extends StatefulWidget {
@@ -485,6 +486,65 @@ class _LiveTokenTrackerPageState extends State<LiveTokenTrackerPage> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: 20),
+
+            // Quick Action Buttons (Receipt + Cancellation)
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      ReceiptModal.show(context, order: _currentOrder);
+                    },
+                    icon: const Icon(Icons.receipt_long_rounded, size: 18),
+                    label: const Text("Digital Receipt"),
+                  ),
+                ),
+                if (_currentOrder.status == OrderStatus.placed) ...[
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text("Cancel Pre-Order?"),
+                            content: Text(
+                              "Are you sure you want to cancel Token ${_currentOrder.tokenNumber}?\n\nIf you paid with Campus Wallet, ₹${_currentOrder.totalAmount.toStringAsFixed(0)} will be immediately refunded to your balance.",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: const Text("No, Keep Order"),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  _orderService.cancelOrder(_currentOrder.id);
+                                  Navigator.pop(ctx);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Order cancelled. Amount refunded to wallet! 💳"),
+                                      backgroundColor: Colors.redAccent,
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                                child: const Text("Yes, Cancel"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.cancel_outlined, size: 18, color: Colors.redAccent),
+                      label: const Text("Cancel & Refund", style: TextStyle(color: Colors.redAccent)),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.redAccent),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
             const SizedBox(height: 24),
 

@@ -6,6 +6,7 @@ import 'cart/cart_page.dart';
 import 'models/canteen_models.dart';
 import 'services/order_service.dart';
 import 'widgets/item_detail_bottom_sheet.dart';
+import 'widgets/receipt_modal.dart';
 import 'order/live_token_tracker_page.dart';
 import 'role_selection_page.dart';
 import 'theme/app_theme.dart';
@@ -1058,37 +1059,47 @@ class _StudentHomeState extends State<StudentHome> {
                   color: AppTheme.textPrimary,
                 ),
               ),
-              OutlinedButton.icon(
-                onPressed: () {
-                  // Reorder items
-                  for (final it in order.items) {
-                    _cart.addItem(
-                      itemId: it.menuItemId,
-                      name: it.itemName,
-                      price: it.price,
-                      quantity: it.quantity,
-                      isVeg: it.isVeg,
-                    );
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Items loaded into cart! 🛒"),
-                      backgroundColor: AppTheme.primary,
-                    ),
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CartPage()),
-                  );
-                },
-                icon: const Icon(Icons.replay_rounded, size: 16),
-                label: const Text("Reorder"),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.receipt_long_rounded, size: 20, color: AppTheme.textSecondary),
+                    tooltip: "View Receipt",
+                    onPressed: () => ReceiptModal.show(context, order: order),
                   ),
-                ),
+                  const SizedBox(width: 4),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      // Reorder items
+                      for (final it in order.items) {
+                        _cart.addItem(
+                          itemId: it.menuItemId,
+                          name: it.itemName,
+                          price: it.price,
+                          quantity: it.quantity,
+                          isVeg: it.isVeg,
+                        );
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Items loaded into cart! 🛒"),
+                          backgroundColor: AppTheme.primary,
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CartPage()),
+                      );
+                    },
+                    icon: const Icon(Icons.replay_rounded, size: 16),
+                    label: const Text("Reorder"),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
